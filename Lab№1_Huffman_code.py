@@ -35,9 +35,14 @@ def build_huffman_tree(freq_dict):
     return nodes[0]
 
     
-def huffman_code(input_file, output_file):
-    freq_dict = count_frequencies(input_file)
-#def huffman_decode:
+def build_huffman_codes(node, current_code, huffman_codes):
+    char, freq, children = node
+    if char is not None:
+        huffman_codes[char] = current_code
+    for child in children:
+        build_huffman_codes(child, current_code + "0", huffman_codes)
+    
+    return huffman_codes
     
 if __name__ == "__main__":
     code_file = "code_file.txt"
