@@ -43,7 +43,30 @@ def build_huffman_codes(node, current_code, huffman_codes):
         build_huffman_codes(child, current_code + "0", huffman_codes)
     
     return huffman_codes
-    
+
+#Кодирование текста
+def encode_text(text, huffman_codes):
+    encoded_text = "".join(huffman_codes[char] for char in text)
+    return encoded_text
+
+# Декодирование текста  
+def decode_text(encoded_text, huffman_tree):
+    decoded_text = ""
+    node = huffman_tree
+
+    for bit in encoded_text:
+        if bit == "0":
+            node = node[2][0]
+        else:
+            node = node[2][1]
+
+        if node[0] is not None:
+            char, freq, _ = node
+            decoded_text += char
+            node = huffman_tree
+
+    return decoded_text
+
 if __name__ == "__main__":
     code_file = "code_file.txt"
     decode_file = "decode_file.txt"
