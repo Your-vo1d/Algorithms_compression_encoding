@@ -67,6 +67,32 @@ def decode_text(encoded_text, huffman_tree):
 
     return decoded_text
 
+def huffman_compress(input_text, output_file):
+    freq_dict = count_frequencies(input_text)
+    huffman_tree = build_huffman_tree(freq_dict)
+    huffman_codes = {}
+    huffman_codes = build_huffman_codes(huffman_tree, "", huffman_codes)  # Получаем коды символов
+    encoded_text = encode_text(input_text, huffman_codes)
+
+    with open(output_file, "w", encoding="utf-8") as file:
+        # Сохраняем словарь частот и закодированный текст в файл
+        file.write(f"{freq_dict}\n")
+        file.write(encoded_text)
+
+# Распаковка файла и восстановление исходного текста
+def huffman_decompress(input_file, output_file):
+    with open(input_file, "r", encoding="utf-8") as file:
+        # Читаем словарь частот и закодированный текст из файла
+        freq_dict_str = file.readline()
+        freq_dict = eval(freq_dict_str)
+        encoded_text = file.read()
+
+    huffman_tree = build_huffman_tree(freq_dict)
+    decoded_text = decode_text(encoded_text, huffman_tree)
+
+    with open(output_file, "w", encoding="utf-8") as file:
+        file.write(decoded_text)
+
 if __name__ == "__main__":
     code_file = "code_file.txt"
     decode_file = "decode_file.txt"
