@@ -33,16 +33,6 @@ def build_huffman_tree(symbols_freq):
     # с префиксными кодами для всех символов
     return heap[0]
 
-
-# Функция для чтения текста из файла
-def read_text_from_file(file_path):
-    # Открываем файл по заданному пути в режиме чтения ("r") с указанием кодировки UTF-8
-    with open(file_path, "r", encoding="utf-8") as file:
-        # Читаем содержимое файла и сохраняем его в переменной text
-        text = file.read()
-    # Возвращаем прочитанный текст
-    return text
-
 # Функция для генерации Хаффмановских кодов на основе построенного дерева Хаффмана
 def create_huffman_codes(huffman_tree):
     # Инициализируем пустой словарь для хранения символов и их соответствующих Хаффмановских кодов
@@ -57,7 +47,14 @@ def create_huffman_codes(huffman_tree):
     # Возвращаем словарь Хаффмановских кодов
     return huffman_codes
 
-
+# Функция для чтения текста из файла
+def read_text_from_file(file_path):
+    # Открываем файл по заданному пути в режиме чтения ("r") с указанием кодировки UTF-8
+    with open(file_path, "r", encoding="utf-8") as file:
+        # Читаем содержимое файла и сохраняем его в переменной text
+        text = file.read()
+    # Возвращаем прочитанный текст
+    return text
 
 #Путь до файла с текстом
 input_file_path = "input_text.txt"
