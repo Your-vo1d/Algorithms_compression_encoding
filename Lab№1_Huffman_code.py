@@ -17,5 +17,22 @@ def build_huffman_tree(symbols_freq):
 
     return heap[0]
 
-        
-    
+
+
+def read_text_from_file(file_path):
+    with open(file_path, "r", encoding="utf-8") as file:
+        text = file.read()
+    return text
+
+#Путь до файла с текстом
+input_file_path = "input_text.txt"
+
+#Текст, который хранится в файле
+input_text = read_text_from_file(input_file_path)
+
+# Подсчет частоты символов в тексте
+symbols_freq = defaultdict(int)        
+
+#Заполнение словаря частотами символов
+for symbol in input_text:
+    symbols_freq[symbol] += 1
