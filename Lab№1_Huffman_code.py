@@ -7,8 +7,8 @@ def build_huffman_tree(symbols_freq):
     heapq.heapify(heap)
 
     while len(heap) > 1:
-        lo = heapq.heappop(heap)
-        hi = heapq.heappop(heap)
+        low = heapq.heappop(heap)
+        high = heapq.heappop(heap)
         for pair in lo[1:]:
             pair[1] = '0' + pair[1]
         for pair in hi[1:]:
