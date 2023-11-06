@@ -1,100 +1,21 @@
-#Функция подсчета частот символов в тексте
-def count_frequencies(text):
-    # Инициализируем пустой словарь, в котором будем хранить частоты символов.
-    freq_dict = {}
+import heapq #Подключени библиотеки для создания дерева
+from collections import defaultdict #
 
-    for char in text:  # Проходим по каждому символу в тексте.
-        if char in freq_dict: # Проверяем, существует ли символ в словаре.
-            freq_dict[char] += 1 # Если символ уже есть в словаре, увеличиваем его частоту на 1.
-        else:
-            freq_dict[char] = 1 # Если символ отсутствует в словаре, добавляем его в словарь с начальной частотой 1.
+#Функция для построение дерева Хаффмана
+def build_huffman_tree(symbols_freq):
+    heap = [[weight, [symbol, ""]] for symbol, weight in symbols_freq.items()]
+    heapq.heapify(heap)
 
-    # Возвращаем словарь, в котором ключи - символы, а значения - их частоты.
-    return freq_dict
+    while len(heap) > 1:
+        lo = heapq.heappop(heap)
+        hi = heapq.heappop(heap)
+        for pair in lo[1:]:
+            pair[1] = '0' + pair[1]
+        for pair in hi[1:]:
+            pair[1] = '1' + pair[1]
+        heapq.heappush(heap, [lo[0] + hi[0]] + lo[1:] + hi[1:])
 
-# Функция построение дерева Хаффмана
-def build_huffman_tree(freq_dict):
-    # Создаем начальные узлы для каждого символа в словаре частот.
-    nodes = [(char, freq, []) for char, freq in freq_dict.items()]
+    return heap[0]
 
-    # Пока в списке узлов есть более одного узла, продолжаем объединять узлы.
-    while len(nodes) > 1:
-        # Сортируем узлы по частотам, чтобы объединить узлы с наименьшими частотами.
-        nodes.sort(key=lambda x: x[1])
-
-        # Извлекаем два узла с наименьшими частотами из начала списка.
-        left = nodes.pop(0)
-        right = nodes.pop(0)
-
-        # Создаем новый узел, объединяя два выбранных узла, с частотой, равной сумме их частот,
-        # и добавляем этот новый узел в список узлов для дальнейшего объединения.
-        merged_node = (None, left[1] + right[1], [left, right])
-        nodes.append(merged_node)
-
-    # Возвращаем корень дерева Хаффмана, который является единственным элементом списка nodes.
-    return nodes[0]
-
-    
-def build_huffman_codes(node, current_code, huffman_codes):
-    char, freq, children = node
-    if char is not None:
-        huffman_codes[char] = current_code
-    for child in children:
-        build_huffman_codes(child, current_code + "0", huffman_codes)
-    
-    return huffman_codes
-
-#Кодирование текста
-def encode_text(text, huffman_codes):
-    encoded_text = "".join(huffman_codes[char] for char in text)
-    return encoded_text
-
-# Декодирование текста  
-def decode_text(encoded_text, huffman_tree):
-    decoded_text = ""
-    node = huffman_tree
-
-    for bit in encoded_text:
-        if bit == "0":
-            node = node[2][0]
-        else:
-            node = node[2][1]
-
-        if node[0] is not None:
-            char, freq, _ = node
-            decoded_text += char
-            node = huffman_tree
-
-    return decoded_text
-
-def huffman_compress(input_text, output_file):
-    freq_dict = count_frequencies(input_text)
-    huffman_tree = build_huffman_tree(freq_dict)
-    huffman_codes = {}
-    huffman_codes = build_huffman_codes(huffman_tree, "", huffman_codes)  # Получаем коды символов
-    encoded_text = encode_text(input_text, huffman_codes)
-
-    with open(output_file, "w", encoding="utf-8") as file:
-        # Сохраняем словарь частот и закодированный текст в файл
-        file.write(f"{freq_dict}\n")
-        file.write(encoded_text)
-
-# Распаковка файла и восстановление исходного текста
-def huffman_decompress(input_file, output_file):
-    with open(input_file, "r", encoding="utf-8") as file:
-        # Читаем словарь частот и закодированный текст из файла
-        freq_dict_str = file.readline()
-        freq_dict = eval(freq_dict_str)
-        encoded_text = file.read()
-
-    huffman_tree = build_huffman_tree(freq_dict)
-    decoded_text = decode_text(encoded_text, huffman_tree)
-
-    with open(output_file, "w", encoding="utf-8") as file:
-        file.write(decoded_text)
-
-if __name__ == "__main__":
-    code_file = "code_file.txt"
-    decode_file = "decode_file.txt"
-    
+        
     
