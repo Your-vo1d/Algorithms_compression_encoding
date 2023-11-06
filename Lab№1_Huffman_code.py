@@ -47,6 +47,19 @@ def create_huffman_codes(huffman_tree):
     # Возвращаем словарь Хаффмановских кодов
     return huffman_codes
 
+#Функция сжатия текста с использованием кода Хаффмана
+def compress_text_huffman(text, huffman_codes):
+    # Инициализация пустой строки для сжатого текста
+    compressed_text = ""
+    
+    # Начинаем обработку каждого символа в исходном тексте
+    for char in text:
+        # Добавляем код Хаффмана для текущего символа к сжатому тексту
+        compressed_text += huffman_codes[char]
+    
+    # Возвращаем сжатый текст
+    return compressed_text
+
 # Функция для чтения текста из файла
 def read_text_from_file(file_path):
     # Открываем файл по заданному пути в режиме чтения ("r") с указанием кодировки UTF-8
